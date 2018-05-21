@@ -1,0 +1,56 @@
+<view class="page"> 
+  <view class='top'>
+    <view class='topLeft'><text style='margin-left:20rpx;'>多项选择</text></view>
+    <view class='topRight'>
+      <view class='topRightContent'>
+        <text style='color:#1bd0bd;font-size:50rpx; font-style:italic;margin-right:10rpx;'>{{nowQuestionNumber+1}}</text><text> / {{questionList.length}}</text>
+      </view>
+    </view>
+  </view>
+
+
+  <view class='questionTitle'>
+       {{nowQuestion.title}}
+  </view>
+
+  <view class='questionOption'>
+    <view class='item' wx:for="{{nowQuestion.options}}"  wx:for-index="key" wx:for-item="value">
+      <view class='characterNotChose' bindtap='chose' data-option='{{choseQuestions[key]}}' wx:if="{{choses[choseQuestions[key]]==false}}">{{choseQuestions[key]}}</view>
+      <view class='characterChose' bindtap='notChose' data-option='{{choseQuestions[key]}}' wx:if="{{choses[choseQuestions[key]]==true}}">{{choseQuestions[key]}}</view>
+      <view class='option'>{{value}}</view>
+    </view>
+  </view>
+
+  <!-- <view class='frontQuestion' wx:if="{{nowQuestionNumber!=0}}"  bindtap='frontQuestion'>←</view> -->
+
+  <!-- <view class='lastQuestion' wx:if="{{nowQuestionNumber!=19}}"  bindtap='afterQuestion'>→</view> -->
+
+  <!-- <view class='bottom'>
+    <view class='left' bindtap='answerCard'>
+      <image class='leftIcon' src='../../images/1-01.png'></image>
+    </view>
+    <view class='right'>
+      <image class='rightIcon' src='../../images/1-02.png'></image>
+    </view>
+  </view> -->
+
+  <view class='bottom'>
+    <view class='middle' bindtap='answerCard'>
+      <image class='leftIcon' src='../../images/1-01.png'></image>
+    </view>
+   </view>
+
+  <view class='blankView'></view>
+
+ <view class='submit' bindtap='submit' wx:if="{{nowQuestionNumber==questionList.length-1}}">
+    <image class='handIcon' src='../../images/hand.png' ></image>
+    交卷
+  </view>
+
+  <view class='submit' bindtap='afterQuestion' wx:if="{{nowQuestionNumber!=questionList.length-1}}">
+    <image class='handIcon' src='../../images/hand.png' ></image>
+    下一题
+  </view>
+
+
+</view>
