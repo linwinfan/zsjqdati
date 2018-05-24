@@ -8,6 +8,7 @@ Page({
     choseQuestionBank:'',
     singleQuestionList: [],
     multiQuestionList: [],
+		truefalseQuestionList: [],
     loading:true,
     defeatNumber: 0,
     averageScore: 0,
@@ -26,124 +27,69 @@ Page({
     var currentUserId = currentUser.id;
     var getSingleQuestionList = getApp().globalData.singleChoiceAnswerNow;
     var getMultiQuestionList = getApp().globalData.multiChoiceAnswerNow;
+		var getTruefalseQuestionList = getApp().globalData.truefalseAnswerNow;
     console.log(getSingleQuestionList);
     for (var i = 0; i < getSingleQuestionList.length; i++) {
-      getSingleQuestionList[i].attributes.number = i + 1;
+      getSingleQuestionList[i].number = i + 1;
     }
     for (var j = 0; j < getMultiQuestionList.length; j++) {
-      getMultiQuestionList[j].attributes.number = j + 1;
+      getMultiQuestionList[j].number = j + 1;
     }
+		for (var j = 0; j < getTruefalseQuestionList.length; j++) {
+			getTruefalseQuestionList[j].number = j + 1;
+		}
    
     var score = getApp().globalData.score;
     that.setData({
       score: score,
       singleQuestionList: getSingleQuestionList,
       multiQuestionList: getMultiQuestionList,
+			truefalseQuestionList:getTruefalseQuestionList,
       loading: false
     });
-    console.log(getSingleQuestionList);
-    var saveSingleQuestionList=new Array();
-    var saveMultiQuestionList = new Array();
-    for (var i = 0; i < getSingleQuestionList.length;i++){
-      saveSingleQuestionList[i] = getSingleQuestionList[i].attributes;
-      
-    }
-    for (var i = 0; i < getMultiQuestionList.length; i++) {
-      saveMultiQuestionList[i] = getMultiQuestionList[i].attributes;
-    }
-    console.log(saveSingleQuestionList)
-    console.log(saveMultiQuestionList)
-
-    that.deleteHistory(currentUserId, choseQuestionBank, currentUserId, score, saveSingleQuestionList, saveMultiQuestionList)
+//     console.log(getSingleQuestionList);
+//     var saveSingleQuestionList=new Array();
+//     var saveMultiQuestionList = new Array();
+//     for (var i = 0; i < getSingleQuestionList.length;i++){
+//       saveSingleQuestionList[i] = getSingleQuestionList[i];
+//       
+//     }
+//     for (var i = 0; i < getMultiQuestionList.length; i++) {
+//       saveMultiQuestionList[i] = getMultiQuestionList[i];
+//     }
+    //console.log(saveSingleQuestionList)
+    //console.log(saveMultiQuestionList)
+		that.insertHistory(currentUserId,score,getSingleQuestionList,getMultiQuestionList,getTruefalseQuestionList,choseQuestionBank);
+    //that.deleteHistory(currentUserId, choseQuestionBank, currentUserId, score, saveSingleQuestionList, saveMultiQuestionList)
   },
 
-  deleteHistory: function (userId, choseQuestionBank, currentUserId, score, saveSingleQuestionList, saveMultiQuestionList){
-    var History = Bmob.Object.extend("history");
-    var queryHistory = new Bmob.Query(History);
-    queryHistory.equalTo("user", userId);
-    queryHistory.equalTo("choseQuestionBank", choseQuestionBank);
-    queryHistory.find().then(function (todos) {
-      return Bmob.Object.destroyAll(todos);
-    }).then(function (todos) {
-      console.log(todos);
-      that.inputHistory(currentUserId, score, saveSingleQuestionList, saveMultiQuestionList, choseQuestionBank);
-      that.saveQBAttributes();
-      that.getHistory();
-      that.getDefeatNumber();
-    }, function (error) {
-      // 异常处理
-      console.log(error);
-      if(error.code==101){
-        that.inputHistory(currentUserId, score, saveSingleQuestionList, saveMultiQuestionList, choseQuestionBank);
-        that.saveQBAttributes();
-        that.getHistory();
-        that.getDefeatNumber();
-      }
+	insertHistory: function (userId, score, getSingleQuestionList, getMultiQuestionList, getTruefalseQuestionList,choseQuestionBank){
+	
 
-    });
-  },
-
-  inputHistory: function (userId, score, getSingleQuestionList, getMultiQuestionList, choseQuestionBank){
-
-    var User = Bmob.Object.extend("_User");
-    var queryUser = new Bmob.Query(User);
-    var currentUser = Bmob.User.current();
-    var currentUserId = currentUser.id;
-    queryUser.get(currentUserId, {
-      success: function (result) {
-
-        var dept = result.get("dept");
-        var realName = result.get("realName");
-        var userPic = result.get("userPic");
-
-        var History = Bmob.Object.extend("history");
-        var History = new History();
-        History.set("user", userId);
-        History.set("dept", dept);
-        History.set("realName", realName);
-        History.set("userPic", userPic);
-        History.set("likeList", []);
-        History.set("score", score);
-        History.set("totalscore", getSingleQuestionList.length + getMultiQuestionList.length*2);
-        History.set("likeNumber", 0);
-        History.set("singleQuestionList", getSingleQuestionList);
-        History.set("multiQuestionList", getMultiQuestionList);
-        History.set("choseQuestionBank", choseQuestionBank);
-        History.save(null, {
-          success: function (result) {
-            result.save();
-          }
-        })
-
-      },
-      error: function (object, error) {
-        // 查询失败
-      }
-    });
-  },
-
-  getHistory:function(){
-    var choseQuestionBank = that.data.choseQuestionBank;
-    var History = Bmob.Object.extend("history");
-    var queryHistory = new Bmob.Query(History);
-    var overPeople=0;
-    queryHistory.equalTo("choseQuestionBank", choseQuestionBank);
-    queryHistory.find({
-      success: function (results) {
-        for (var i = 0; i < results.length; i++) {
-          if (getApp().globalData.score>results[i].attributes.score){
-            overPeople++;
-          }
-        }
-        console.log(overPeople)
-        that.setOverPeople(overPeople)
-      },
-      error: function (error) {
-        console.log("查询失败: " + error.code + " " + error.message);
-      }
-    });
-  },
-
+	    var currentUser = Bmob.User.current();
+	    //var currentUserId = currentUser.id;
+			
+			var History = Bmob.Query("history");
+			History.set("user", currentUser.objectId);
+			History.set("dept", currentUser.dept);
+			History.set("realName", currentUser.realName);
+			History.set("userPic", currentUser.userPic);
+			History.set("likeList", []);
+			History.set("score", score);
+			History.set("totalscore", getSingleQuestionList.length + getMultiQuestionList.length*2+getTruefalseQuestionList.length);
+			History.set("likeNumber", 0);
+			History.set("singleQuestionList", getSingleQuestionList);
+			History.set("multiQuestionList", getMultiQuestionList);
+			History.set("tfQuestionList", getTruefalseQuestionList);
+			History.set("choseQuestionBank", choseQuestionBank);
+			History.save().then(res=>{
+				console.log(res)
+				that.saveQBAttributes();
+				//that.getHistory();
+				that.getDefeatNumber();
+			}).catch(err=>console.log(err));
+			
+	  },
 
   setOverPeople: function (overPeople){
     console.log(overPeople)
@@ -165,166 +111,56 @@ Page({
   showDetail: function (e) {
     var index = e.currentTarget.dataset.index;
     var choseType = e.currentTarget.dataset.chosetype;
-    if (choseType =='single'){
-      wx.navigateTo({
-        url: '../analysis/analysis?choseType=single&index=' + index
-      });
-    }
-    else if (choseType == 'multi')
     wx.navigateTo({
-      url: '../analysis/analysis?choseType=multi&index=' + index
-    });
+        url: '../analysis/analysis?choseType='+chosetype+'&index=' + index
+      });
   },
 
 
   saveQBAttributes: function () {
     var choseQuestionBank = that.data.choseQuestionBank;
-    var QBAttributes = Bmob.Object.extend("QBAttributes");
-    var queryQBAttributes = new Bmob.Query(QBAttributes);
-    if (choseQuestionBank =='大学计算机期末考试题库'){
-      queryQBAttributes.get('6o5I3334', {
-        success: function (result) {
-          var peopleNumber = result.attributes.PeopleNumber + 1;
-          var allScore = getApp().globalData.score + result.attributes.allScore;
-          var averageScore = allScore / peopleNumber;
-          var newAverageScore = averageScore.toFixed(1);
-          var correctRate = getApp().globalData.score / 60 * 100;
-          var newCorrectRate = correctRate.toFixed(1);
-          result.set('PeopleNumber', peopleNumber);
-          result.set('allScore', allScore);
-          result.set('averageScore', averageScore);
-          result.save();
-          that.setData({
-            // defeatNumber: ,
-            averageScore: newAverageScore,
-            correctRate: newCorrectRate
-          });
-        },
-        error: function (object, error) {
-          console.log("ccc")
-        }
-      });
-    }
-    else if (choseQuestionBank == '计算机二级office题库') {
-      queryQBAttributes.get('cVH1OOOX', {
-        success: function (result) {
-          var peopleNumber = result.attributes.PeopleNumber + 1;
-          var allScore = getApp().globalData.score + result.attributes.allScore;
-          var averageScore = allScore / peopleNumber;
-          var newAverageScore = averageScore.toFixed(1);
-          var correctRate = getApp().globalData.score / 60 * 100;
-          var newCorrectRate = correctRate.toFixed(1);
-          result.set('PeopleNumber', peopleNumber);
-          result.set('allScore', allScore);
-          result.set('averageScore', averageScore);
-          result.save();
-          that.setData({
-            // defeatNumber: ,
-            averageScore: newAverageScore,
-            correctRate: newCorrectRate
-          });
-        },
-        error: function (object, error) {
-          console.log("ccc")
-        }
-      });
-    }
-    else if (choseQuestionBank == '毛概期末考试题库') {
-      queryQBAttributes.get('pQrWhhhm', {
-        success: function (result) {
-          var peopleNumber = result.attributes.PeopleNumber + 1;
-          var allScore = getApp().globalData.score + result.attributes.allScore;
-          var averageScore = allScore / peopleNumber;
-          var newAverageScore = averageScore.toFixed(1);
-          var correctRate = getApp().globalData.score / 60 * 100;
-          var newCorrectRate = correctRate.toFixed(1);
-          result.set('PeopleNumber', peopleNumber);
-          result.set('allScore', allScore);
-          result.set('averageScore', averageScore);
-          result.save();
-          that.setData({
-            // defeatNumber: ,
-            averageScore: newAverageScore,
-            correctRate: newCorrectRate
-          });
-        },
-        error: function (object, error) {
-          console.log("ccc")
-        }
-      });
-    }
-    else if (choseQuestionBank == '中国近代史期末考试题库') {
-      queryQBAttributes.get('h07m333C', {
-        success: function (result) {
-          var peopleNumber = result.attributes.PeopleNumber + 1;
-          var allScore = getApp().globalData.score + result.attributes.allScore;
-          var averageScore = allScore / peopleNumber;
-          var newAverageScore = averageScore.toFixed(1);
-          var correctRate = getApp().globalData.score / 60 * 100;
-          var newCorrectRate = correctRate.toFixed(1);
-          result.set('PeopleNumber', peopleNumber);
-          result.set('allScore', allScore);
-          result.set('averageScore', averageScore);
-          result.save();
-          that.setData({
-            // defeatNumber: ,
-            averageScore: newAverageScore,
-            correctRate: newCorrectRate
-          });
-        },
-        error: function (object, error) {
-          console.log("ccc")
-        }
-      });
-    }
-    else if (choseQuestionBank == '马克思原理期末考试题库') {
-      queryQBAttributes.get('ZwT6AAAa', {
-        success: function (result) {
-          var peopleNumber = result.attributes.PeopleNumber + 1;
-          var allScore = getApp().globalData.score + result.attributes.allScore;
-          var averageScore = allScore / peopleNumber;
-          var newAverageScore = averageScore.toFixed(1);
-          var correctRate = getApp().globalData.score / 60 * 100;
-          var newCorrectRate = correctRate.toFixed(1);
-          result.set('PeopleNumber', peopleNumber);
-          result.set('allScore', allScore);
-          result.set('averageScore', averageScore);
-          result.save();
-          that.setData({
-            // defeatNumber: ,
-            averageScore: newAverageScore,
-            correctRate: newCorrectRate
-          });
-        },
-        error: function (object, error) {
-          console.log("ccc")
-        }
-      });
-    }
-    else if (choseQuestionBank == '形式与政策') {
-      queryQBAttributes.get('6o5I3334', {
-        success: function (result) {
-          var peopleNumber = result.attributes.PeopleNumber + 1;
-          var allScore = getApp().globalData.score + result.attributes.allScore;
-          var averageScore = allScore / peopleNumber;
-          var newAverageScore = averageScore.toFixed(1);
-          var correctRate = getApp().globalData.score / 60 * 100;
-          var newCorrectRate = correctRate.toFixed(1);
-          result.set('PeopleNumber', peopleNumber);
-          result.set('allScore', allScore);
-          result.set('averageScore', averageScore);
-          result.save();
-          that.setData({
-            // defeatNumber: ,
-            averageScore: newAverageScore,
-            correctRate: newCorrectRate
-          });
-        },
-        error: function (object, error) {
-          console.log("ccc")
-        }
-      });
-    }
+
+    var queryQBAttributes = new Bmob.Query("QBAttributes");
+		queryQBAttributes.equalTo("choseQuestionBank","==",choseQuestionBank);
+		queryQBAttributes.limit(1);
+		queryQBAttributes.find().then(results=>{
+			if(results.length==1){
+				var result = results[0];
+				var peopleNumber = result.PeopleNumber + 1;
+				var allScore = getApp().globalData.score + result.allScore;
+				var averageScore = allScore / peopleNumber;
+				var newAverageScore = averageScore.toFixed(1);
+				var correctRate = getApp().globalData.score / 60 * 100;
+				var newCorrectRate = correctRate.toFixed(1);
+				result.set('PeopleNumber', peopleNumber);
+				result.set('allScore', allScore);
+				result.set('averageScore', averageScore);
+				result.save().then(res=>{console.log(res)}).catch(err=>console.log(err));
+				that.setData({
+					// defeatNumber: ,
+					averageScore: newAverageScore,
+					correctRate: newCorrectRate
+				});
+			}else{
+				var query = new Bmob.Query("QBAttributes");
+				query.set("choseQuestionBank",choseQuestionBank);
+				query.set('PeopleNumber', 1);
+				query.set('allScore', getApp().globalData.score);
+				query.set('averageScore', getApp().globalData.score);
+				query.save().then(res=>{console.log(res)}).catch(err=>console.log(err));
+			}
+			
+		}).catch(err=>{
+			console.log(err)
+			if(err.code==101){
+				var query = new Bmob.Query("QBAttributes");
+				query.set("choseQuestionBank",choseQuestionBank);
+				query.set('PeopleNumber', 1);
+				query.set('allScore', getApp().globalData.score);
+				query.set('averageScore', getApp().globalData.score);
+				query.save().then(res=>{console.log(res)}).catch(err=>console.log(err));
+				}
+			});
   },
 
   allAnalysis:function(){
@@ -342,129 +178,17 @@ Page({
 
   getDefeatNumber: function () {
     var choseQuestionBank = that.data.choseQuestionBank;
-    var History = Bmob.Object.extend("history");
-    var queryHistory = new Bmob.Query(History);
-    var defeatNumber = 0;
-    if (choseQuestionBank == '大学计算机期末考试题库') {
-      queryHistory.equalTo("choseQuestionBank", "大学计算机期末考试题库");
-      queryHistory.find({
-        success: function (results) {
-          for (var i = 0; i < results.length; i++) {
-            var score = results[i].attributes.score;
-            if (that.data.score > score) {
-              defeatNumber++;
-            }
-          }
-          that.setData({
-            defeatNumber: defeatNumber,
-            loading: false
-          });
-        },
-        error: function (error) {
-          console.log("查询失败: " + error.code + " " + error.message);
-        }
-      });
-    }
-    else if (choseQuestionBank == '计算机二级office题库') {
-      queryHistory.equalTo("choseQuestionBank", "计算机二级office题库");
-      queryHistory.find({
-        success: function (results) {
-          for (var i = 0; i < results.length; i++) {
-            var score = results[i].attributes.score;
-            if (that.data.score > score) {
-              defeatNumber++;
-            }
-          }
-          that.setData({
-            defeatNumber: defeatNumber,
-            loading: false
-          });
-        },
-        error: function (error) {
-          console.log("查询失败: " + error.code + " " + error.message);
-        }
-      });
-    }
-    else if (choseQuestionBank == '毛概期末考试题库') {
-      queryHistory.equalTo("choseQuestionBank", "毛概期末考试题库");
-      queryHistory.find({
-        success: function (results) {
-          for (var i = 0; i < results.length; i++) {
-            var score = results[i].attributes.score;
-            if (that.data.score > score) {
-              defeatNumber++;
-            }
-          }
-          that.setData({
-            defeatNumber: defeatNumber,
-            loading: false
-          });
-        },
-        error: function (error) {
-          console.log("查询失败: " + error.code + " " + error.message);
-        }
-      });
-    }
-    else if (choseQuestionBank == '中国近代史期末考试题库') {
-      queryHistory.equalTo("choseQuestionBank", "中国近代史期末考试题库");
-      queryHistory.find({
-        success: function (results) {
-          for (var i = 0; i < results.length; i++) {
-            var score = results[i].attributes.score;
-            if (that.data.score > score) {
-              defeatNumber++;
-            }
-          }
-          that.setData({
-            defeatNumber: defeatNumber,
-            loading: false
-          });
-        },
-        error: function (error) {
-          console.log("查询失败: " + error.code + " " + error.message);
-        }
-      });
-    }
-    else if (choseQuestionBank == '马克思原理期末考试题库') {
-      queryHistory.equalTo("choseQuestionBank", "马克思原理期末考试题库");
-      queryHistory.find({
-        success: function (results) {
-          for (var i = 0; i < results.length; i++) {
-            var score = results[i].attributes.score;
-            if (that.data.score > score) {
-              defeatNumber++;
-            }
-          }
-          that.setData({
-            defeatNumber: defeatNumber,
-            loading: false
-          });
-        },
-        error: function (error) {
-          console.log("查询失败: " + error.code + " " + error.message);
-        }
-      });
-    }
-    else if (choseQuestionBank == '形式与政策') {
-      queryHistory.equalTo("choseQuestionBank", "形式与政策");
-      queryHistory.find({
-        success: function (results) {
-          for (var i = 0; i < results.length; i++) {
-            var score = results[i].attributes.score;
-            if (that.data.score > score) {
-              defeatNumber++;
-            }
-          }
-          that.setData({
-            defeatNumber: defeatNumber,
-            loading: false
-          });
-        },
-        error: function (error) {
-          console.log("查询失败: " + error.code + " " + error.message);
-        }
-      });
-    }
+    //var History = Bmob.Object.extend("history");
+    var queryHistory = new Bmob.Query("history");
+		queryHistory.equalTo("choseQuestionBank","==", choseQuestionBank);
+		queryHistory.equalTo("score",">",that.data.score)
+		queryHistory.count().then(res=>{
+			that.setData({
+				defeatNumber: res+1,
+				loading: false
+			});
+		});
+
   },
 
 

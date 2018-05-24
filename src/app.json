@@ -15,7 +15,9 @@
     "pages/singleChoiceExplain/singleChoiceExplain",
     "pages/singleChoiceDetail/singleChoiceDetail",
     "pages/historyResult/historyResult",
-    "pages/ranking/ranking"
+    "pages/ranking/ranking",
+		"pages/truefalseExplain/truefalseExplain",
+		"pages/truefalseDetail/truefalseDetail"
   ],
   "window":{
     "backgroundTextStyle":"light",

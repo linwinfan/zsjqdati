@@ -1,3 +1,5 @@
+@import "../../style/loading.wxss";
+
 page{
      height: 100%;
  }
@@ -52,28 +54,25 @@ page{
 
 
 
-.characterNotChose{
-  width: 40px;
-  height: 40px;
-  background-color: white;
-  color: #1bd0bd;
-  text-align: center;
-  border-radius: 100px;
+.correctCharacter{
   border:1px #1bd0bd solid;
-  justify-content:center;
-  display:flex;
-  align-items:center;
-    float: left;
-}
-
-.characterChose{
-  width: 40px;
-  height: 40px;
   background-color: #1bd0bd;
   color: white;
+}
+
+
+
+.blankCharacter{
+  border:1px #1bd0bd solid;
+  background-color: white;
+  color: #1bd0bd;
+}
+
+.character{
+  width: 40px;
+  height: 40px;
   text-align: center;
   border-radius: 100px;
-  border:1px #1bd0bd solid;
   justify-content:center;
   display:flex;
   align-items:center;
@@ -104,6 +103,8 @@ page{
 } */
 
 .lastQuestion{
+  font-size: 30rpx;
+  padding: 10rpx;
   margin-right: 30rpx;
   text-align: center;
   justify-content:center;
@@ -112,8 +113,6 @@ page{
   color: #ffffff;
   position: fixed;
   bottom: 130rpx;
-  width: 90rpx;
-  height: 40rpx;
   right: 0;
   background-color: #1bd0bd;
   border-radius: 15rpx;
@@ -126,26 +125,6 @@ page{
   bottom: 0;
   height: 100rpx;
   border-top: 1px solid #c9c9d8;
-}
-
-.left{
-  text-align: center;
-  justify-content:center;
-  display:flex;
-  align-items:center;
-  float: left;
-  width: 50%;
-  height: 100%;
-}
-
-.right{
-  text-align: center;
-  justify-content:center;
-  display:flex;
-  align-items:center;
-  float: right;
-  width: 50%;
-  height: 100%;
 } */
 
  .bottom{
@@ -167,6 +146,27 @@ text-align: center;
   align-items:center;
 }
 
+
+/* .left{
+  text-align: center;
+  justify-content:center;
+  display:flex;
+  align-items:center;
+  float: left;
+  width: 50%;
+  height: 100%;
+} */
+
+/* .right{
+  text-align: center;
+  justify-content:center;
+  display:flex;
+  align-items:center;
+  float: right;
+  width: 50%;
+  height: 100%;
+} */
+
 .leftIcon{
   width: 70rpx;
   height: 70rpx;
@@ -176,12 +176,6 @@ text-align: center;
   width: 75rpx;
   height: 75rpx;
 } */
-
-
-.blankView{
-  height: 50rpx;
-  width: 100%;
-}
 
 .submit{
 	position: fixed;
@@ -204,3 +198,6 @@ text-align: center;
   width: 60rpx;
   height: 60rpx;
 }
+
+
+

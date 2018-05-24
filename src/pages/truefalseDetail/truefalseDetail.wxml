@@ -27,7 +27,7 @@
 
   <!-- <view class='frontQuestion' wx:if="{{nowQuestionNumber!=0}}"  bindtap='frontQuestion'>←</view> -->
 
-  <view class='lastQuestion' wx:if="{{nowQuestionNumber!=19}}"  bindtap='afterQuestion'>跳过此题</view>
+  <view class='lastQuestion' wx:if="{{nowQuestionNumber!=questionList.length-1}}"  bindtap='afterQuestion'>跳过此题</view>
 
   <!-- <view class='bottom'>
     <view class='left' bindtap='answerCard'>
@@ -37,15 +37,15 @@
       <image class='rightIcon' src='../../images/1-02.png'></image>
     </view>
   </view> -->
-
+<view class='submit' bindtap='submit' wx:if="{{nowQuestionNumber==questionList.length-1}}">
+    <image class='handIcon' src='../../images/hand.png' ></image>
+    交卷
+  </view>
   <view class='bottom'>
     <view class='middle' bindtap='answerCard'>
       <image class='leftIcon' src='../../images/1-01.png'></image>
     </view>
   </view>
-<view class='submit' bindtap='submit' wx:if="{{nowQuestionNumber==questionList.length-1}}">
-    <image class='handIcon' src='../../images/hand.png' ></image>
-    交卷
-  </view>
+
 
 </view>

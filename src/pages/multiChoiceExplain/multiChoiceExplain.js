@@ -31,5 +31,6 @@ Page({
       url: '../answerCard/answerCard'
     });
   },
+	
 
 })

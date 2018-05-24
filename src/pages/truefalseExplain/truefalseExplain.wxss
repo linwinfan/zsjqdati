@@ -71,15 +71,6 @@ page{
   height: 100%;
 } */
 
-.leftIcon{
-  width: 70rpx;
-  height: 70rpx;
-}
-
-/* .rightIcon{
-  width: 75rpx;
-  height: 75rpx;
-} */
 
  .bottom{
   width: 100%;
@@ -87,7 +78,7 @@ page{
   bottom: 0;
   height: 100rpx;
   border-top: 1px solid #c9c9d8;
-  text-align: center;
+text-align: center;
   justify-content:center;
   display:flex;
   align-items:center;
@@ -99,3 +90,13 @@ page{
   display:flex;
   align-items:center;
 }
+
+.leftIcon{
+  width: 70rpx;
+  height: 70rpx;
+}
+/* 
+.rightIcon{
+  width: 75rpx;
+  height: 75rpx;
+} */

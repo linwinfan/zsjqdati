@@ -18,6 +18,7 @@ Page({
 
 
   onLoad: function () {
+		console.log('onLoad')
     that = this;
     var choseQuestionBank = getApp().globalData.choseQuestionBank;
     var questionList = getApp().globalData.multiChoiceAnswerNow;
@@ -27,7 +28,7 @@ Page({
       nowQuestionNumber: 0
     });
     console.log(that.data.nowQuestion)
-    console.log(getApp().globalData.multiChoiceAnswerNow)
+    //console.log(getApp().globalData.multiChoiceAnswerNow)
   },
 
 
@@ -39,7 +40,7 @@ Page({
     console.log(event);
     //var questionList = that.data.questionList;
     //var nowQuestionNumber = that.data.nowQuestionNumber;
-    //var answer = questionList[nowQuestionNumber].attributes.answer[0];
+    //var answer = questionList[nowQuestionNumber].answer[0];
     var choseValue = event.currentTarget.dataset.option;
     var choseCharacter = that.data.choseCharacter;
     choseCharacter.push(choseValue);
@@ -60,96 +61,6 @@ Page({
       choses: cs,
     });
   },
-/*
-  choseA: function () {
-    var questionList = that.data.questionList;
-    var nowQuestionNumber = that.data.nowQuestionNumber;
-    var answer = questionList[nowQuestionNumber].attributes.answer[0];
-    var choseCharacter = that.data.choseCharacter;
-    choseCharacter.push('A');
-    that.setData({
-      choseA:true,
-    });
-  },
-
-  notChoseA: function () {
-    var questionList = that.data.questionList;
-    var nowQuestionNumber = that.data.nowQuestionNumber;
-    var answer = questionList[nowQuestionNumber].attributes.answer[0];
-    var choseCharacter = that.data.choseCharacter;
-    that.findCharacter('A', choseCharacter);
-    that.setData({
-      choseA: false,
-    });
-  },
-
-  choseB: function () {
-    var questionList = that.data.questionList;
-    var nowQuestionNumber = that.data.nowQuestionNumber;
-    var answer = questionList[nowQuestionNumber].attributes.answer[0];
-    var choseCharacter = that.data.choseCharacter;
-    choseCharacter.push('B');
-    that.setData({
-      choseB: true,
-    });
-  },
-
-  notChoseB: function () {
-    var questionList = that.data.questionList;
-    var nowQuestionNumber = that.data.nowQuestionNumber;
-    var answer = questionList[nowQuestionNumber].attributes.answer[0];
-    var choseCharacter = that.data.choseCharacter;
-    that.findCharacter('B', choseCharacter);
-    that.setData({
-      choseB: false,
-    });
-  },
-
-  choseC: function () {
-    var questionList = that.data.questionList;
-    var nowQuestionNumber = that.data.nowQuestionNumber;
-    var answer = questionList[nowQuestionNumber].attributes.answer[0];
-    var choseCharacter = that.data.choseCharacter;
-    choseCharacter.push('C');
-    that.setData({
-      choseC: true,
-    });
-  },
-
-  notChoseC: function () {
-    var questionList = that.data.questionList;
-    var nowQuestionNumber = that.data.nowQuestionNumber;
-    var answer = questionList[nowQuestionNumber].attributes.answer[0];
-    var choseCharacter = that.data.choseCharacter;
-    that.findCharacter('C', choseCharacter);
-    that.setData({
-      choseC: false,
-    });
-  },
-
-  choseD: function () {
-    var questionList = that.data.questionList;
-    var nowQuestionNumber = that.data.nowQuestionNumber;
-    var answer = questionList[nowQuestionNumber].attributes.answer[0];
-    var choseCharacter = that.data.choseCharacter;
-    choseCharacter.push('D');
-    that.setData({
-      choseD: true,
-    });
-  },
-
-  notChoseD: function () {
-    var questionList = that.data.questionList;
-    var nowQuestionNumber = that.data.nowQuestionNumber;
-    var answer = questionList[nowQuestionNumber].attributes.answer[0];
-    var choseCharacter = that.data.choseCharacter;
-    that.findCharacter('D', choseCharacter);
-    that.setData({
-      choseD: false,
-    });
-  },*/
-
-
 
   findCharacter: function (characher, choseList) {
     for (var i = 0; i < choseList.length; i++) {
@@ -160,36 +71,37 @@ Page({
     }
   },
 
-  // frontQuestion: function () {
-  //   var questionList = that.data.questionList;
-  //   var frontQuestionNumber = that.data.nowQuestionNumber - 1;
-  //   that.setData({
-  //     nowQuestion: questionList[frontQuestionNumber],
-  //     nowQuestionNumber: frontQuestionNumber,
-  //   })
-  //   console.log(that.data.questionList)
-  // },
 
   afterQuestion: function () {
+		that=this;
     var nowQuestionNumber = that.data.nowQuestionNumber
     var questionList = that.data.questionList;
-    questionList[nowQuestionNumber].attributes.userChose = that.data.choseCharacter;
-    var afterQuestionNumber = nowQuestionNumber + 1;
-    var answerResult = that.contrastAnswer(questionList[nowQuestionNumber].attributes.userChose, questionList[nowQuestionNumber].attributes.answer)
-    questionList[nowQuestionNumber].attributes.answerResult = answerResult;
-    that.setData({
-      nowQuestion: questionList[afterQuestionNumber],
-      nowQuestionNumber: afterQuestionNumber,
-      questionList: questionList,
-      choses: { 'A': false, 'B': false, 'C': false, 'D': false, 'E': false, 'F': false, 'G': false, 'H': false, 'I': false, 'J': false },
-      choseCharacter:[]
-    }) 
+    questionList[nowQuestionNumber].userChose = that.data.choseCharacter;
+    
+    var answerResult = that.contrastAnswer(questionList[nowQuestionNumber].userChose, questionList[nowQuestionNumber].answer)
+    questionList[nowQuestionNumber].answerResult = answerResult;
+		if(nowQuestionNumber==questionList.length-1){
+			that.overChoice(nowQuestionNumber)
+		}
+		else
+		{
+			var afterQuestionNumber = nowQuestionNumber + 1;
+			console.log(questionList[nowQuestionNumber])
+			that.setData({
+				nowQuestion: questionList[afterQuestionNumber],
+				nowQuestionNumber: afterQuestionNumber,
+				questionList: questionList,
+				choses: { 'A': false, 'B': false, 'C': false, 'D': false, 'E': false, 'F': false, 'G': false, 'H': false, 'I': false, 'J': false },
+				choseCharacter:[]
+			}) 
+		}
+		
     
 
-    console.log(questionList[nowQuestionNumber].attributes.userChose)
-    console.log(questionList[nowQuestionNumber].attributes.answer)
-    console.log(nowQuestionNumber)
-    console.log(that.data.questionList)
+    //console.log(questionList[nowQuestionNumber].userChose)
+    //console.log(questionList[nowQuestionNumber].answer)
+    //console.log(nowQuestionNumber)
+    //console.log(that.data.questionList)
   },
 
   answerCard: function () {
@@ -198,7 +110,6 @@ Page({
       url: '../answerCard/answerCard'
     });
   },
-
 
   contrastAnswer: function (array1,array2){
     var answerResult;
@@ -233,28 +144,17 @@ Page({
     return answerResult;
   },
 
-  submit:function(){
-
-    var nowQuestionNumber = that.data.nowQuestionNumber
-    var questionList = that.data.questionList;
-    questionList[nowQuestionNumber].attributes.userChose = that.data.choseCharacter;
-    var answerResult = that.contrastAnswer(questionList[nowQuestionNumber].attributes.userChose, questionList[nowQuestionNumber].attributes.answer)
-    questionList[nowQuestionNumber].attributes.answerResult = answerResult;
-    that.setData({
-     
-      questionList: questionList,
-      choses: { 'A': false, 'B': false, 'C': false, 'D': false, 'E': false, 'F': false, 'G': false, 'H': false, 'I': false, 'J': false },
-      choseCharacter: []
-    })
-    wx.redirectTo({
-      url: '../result/result'
-    });
-  }
-
-
-
-
   
+
+	overChoice:function(questionNumber){
+		getApp().globalData.multiChoiceAnswerNow = that.data.questionList;
+		//getApp().globalData.multiChoiceAnswerNow = that.data.newMultiQuestionList;
+		if (questionNumber == that.data.questionList.length-1){
+			wx.redirectTo({
+				url: '../truefalseExplain/truefalseExplain'
+			});
+		}
+	},
 
 
 })

@@ -14,27 +14,24 @@ Page({
   
   onLoad: function (options) {
     that=this;
-    var historyQuestionBank=new Array();
+    //var historyQuestionBank=new Array();
     var currentUser = Bmob.User.current();
-    var currentUserId = currentUser.id;
-    var History = Bmob.Object.extend("history");
-    var queryHistory = new Bmob.Query(History);
-    queryHistory.equalTo("user", currentUserId);
-    queryHistory.find({
-      success: function (results) {
-        console.log("共查询到 " + results.length + " 条记录");
-        for (var i = 0; i < results.length; i++) {
-          historyQuestionBank[i] = results[i];
-        }
-        console.log(historyQuestionBank);
-        that.setData({
-          historyQuestionBank: historyQuestionBank,
-        });
-      },
-      error: function (error) {
-        console.log("查询失败: " + error.code + " " + error.message);
-      }
-    });
+    //var currentUserId = currentUser.id;
+    //var History = Bmob.Object.extend("history");
+    var queryHistory = new Bmob.Query("history");
+    queryHistory.equalTo("user", "==",currentUser.id);
+		queryHistory.order("-createdAt");
+		queryHistory.find().then(results=>{
+			console.log("共查询到 " + results.length + " 条记录");
+// 			for (var i = 0; i < results.length; i++) {
+// 				historyQuestionBank[i] = results[i];
+// 			}
+			//console.log(historyQuestionBank);
+			that.setData({
+				historyQuestionBank: results,
+			});
+		})
+		.catch(err=>{console.log(err)});
   },
 
   showDetail:function(e){
@@ -49,30 +46,24 @@ Page({
     //   }
     // })
     var index = e.currentTarget.dataset.index;
-    var objectId = that.data.historyQuestionBank[index].id;
+    var objectId = that.data.historyQuestionBank[index].objectId;
     var choseQuestionBank = that.data.historyQuestionBank[index].choseQuestionBank;
-    var History = Bmob.Object.extend("history");
-    var queryHistory = new Bmob.Query(History);
-    queryHistory.get(objectId, {
-      success: function (result) {
-        console.log(result)
-        // that.setData({
-        //   singleQuestionList: result.attributes.singleQuestionList,
-        //   multiQuestionList: result.attributes.multiQuestionList,
-        //   score: result.attributes.score,
-        // });
-        getApp().globalData.singleChoiceAnswerNow = result.attributes.singleQuestionList;
-        getApp().globalData.multiChoiceAnswerNow = result.attributes.multiQuestionList;
-        getApp().globalData.score = result.attributes.score;
-        getApp().globalData.totalscore = result.attributes.totalscore;
-        getApp().globalData.choseQuestionBank = result.attributes.choseQuestionBank;
-        wx.navigateTo({
-          url: '../historyResult/historyResult'
-        });
-      },
-      error: function (object, error) {
-      }
-    });
+    //var History = Bmob.Object.extend("history");
+    var queryHistory = new Bmob.Query("history");
+		queryHistory.get(objectId).then(result=>{
+			console.log(result)
+			
+			getApp().globalData.singleChoiceAnswerNow = result.singleQuestionList;
+			getApp().globalData.multiChoiceAnswerNow = result.multiQuestionList;
+			getApp().globalData.truefalseAnswerNow = result.tfQuestionList;
+			getApp().globalData.score = result.score;
+			getApp().globalData.totalscore = result.totalscore;
+			getApp().globalData.choseQuestionBank = result.choseQuestionBank;
+			wx.navigateTo({
+				url: '../historyResult/historyResult'
+			});
+		}).catch(err=>{console.log(err)});
+    
     console.log(getApp().globalData.singleChoiceAnswerNow)
    
   }

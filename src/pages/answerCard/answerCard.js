@@ -5,6 +5,7 @@ Page({
   data: {
     singleQuestionList:[],
     multiQuestionList: [],
+		truefalseQuestionList:[],
     // noMulti:null
     loading: true
 
@@ -16,31 +17,21 @@ Page({
     // var noMulti;
     var getSingleQuestionList = getApp().globalData.singleChoiceAnswerNow; 
     var getMultiQuestionList = getApp().globalData.multiChoiceAnswerNow;  
+		var getTruefalseQuestionList = getApp().globalData.truefalseAnswerNow;
     for (var i = 0; i < getSingleQuestionList.length; i++) {
-      getSingleQuestionList[i].attributes.number = i + 1;
+      getSingleQuestionList[i].number = i + 1;
     }
-    // if (getMultiQuestionList.length==0){
-    //   noMulti=true
-    // }
-    // else if (getMultiQuestionList.length != 0){
-    //   for (var j = 0; j < 20; j++) {
-    //     getMultiQuestionList[j].attributes.number = j + 1;
-    //   }
-    //   noMulti=false;
-    // }
-    
-    // that.setData({
-    //   singleQuestionList: getSingleQuestionList,
-    //   multiQuestionList: getMultiQuestionList,
-    //   noMulti: noMulti
-    // });
     for (var i = 0; i < getMultiQuestionList.length; i++) {
-      getMultiQuestionList[i].attributes.number = i + 1;
+      getMultiQuestionList[i].number = i + 1;
     }
+		for (var i = 0; i < getTruefalseQuestionList.length; i++) {
+			getTruefalseQuestionList[i].number = i + 1;
+		}
 
     that.setData({
       singleQuestionList: getSingleQuestionList,
       multiQuestionList: getMultiQuestionList,
+			truefalseQuestionList:getTruefalseQuestionList,
       loading: false
     });
     console.log(getApp().globalData.multiChoiceAnswerNow)

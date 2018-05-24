@@ -13,6 +13,7 @@ Page({
     that = this;
     var currentUser = Bmob.User.current();
     var currentUserId = currentUser.id;
+		/*
     app.getUserInfo(function (userInfo) {
       console.log(userInfo)
       //更新数据
@@ -20,7 +21,7 @@ Page({
         userInfo: userInfo,
         currentUserId: currentUserId
       })
-    })
+    })*/
   },
 
   onShow: function () {
@@ -28,51 +29,35 @@ Page({
   },
 
   testHistory:function(){
-    var currentUserId = that.data.currentUserId;
-    var User = Bmob.Object.extend("_User");
-    var queryUser = new Bmob.Query(User);
-    queryUser.get(currentUserId, {
-      success: function (result) {
-        var register = result.get("register");
-        if (register==false){
-          wx.navigateTo({
-            url: '../register/register'
-          })
-        }
-        else{
-          wx.navigateTo({
-            url: '../testHistory/testHistory'
-          })
-        }
-      },
-      error: function (object, error) {
-        // 查询失败
-      }
-    });
+		var User = Bmob.User.current();
+		console.log(User);
+		if(User.register==true){
+			wx.navigateTo({
+				url: '../testHistory/testHistory'
+			})
+		}else{
+			wx.navigateTo({
+				url: '../register/register'
+			})
+		}
+
   },
 
   personalInformation: function () {
-    var currentUserId = that.data.currentUserId;
-    var User = Bmob.Object.extend("_User");
-    var queryUser = new Bmob.Query(User);
-    queryUser.get(currentUserId, {
-      success: function (result) {
-        var register = result.get("register");
-        if (register == false) {
-          wx.navigateTo({
-            url: '../register/register'
-          })
-        }
-        else {
-          wx.navigateTo({
-            url: '../personalInformation/personalInformation'
-          })
-        }
-      },
-      error: function (object, error) {
-        // 查询失败
-      }
-    });
+
+    var User = Bmob.User.current();
+		console.log(User);
+		if(User.register==true){
+			wx.navigateTo({
+				url: '../personalInformation/personalInformation'
+			})
+		}else{
+			wx.navigateTo({
+				url: '../register/register'
+			})
+		}
+		
+
   },
 
   onShareAppMessage: function (res) {

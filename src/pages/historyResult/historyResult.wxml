@@ -9,8 +9,8 @@
    <view class='dataAnalysis'>
     <view class='dataAnalysisLeft'>
       <view class='content'>
-        <view class='dataAnalysisText'>已击败考生</view>
-        <view class='dataAnalysisNumber'>{{defeatNumber}}人</view>
+        <view class='dataAnalysisText'>本次成绩排名</view>
+        <view class='dataAnalysisNumber'>第{{defeatNumber}}位</view>
       </view>
     </view>
     <view class='dataAnalysisMiddle'>
@@ -53,7 +53,18 @@
       <view class='singleChoiceItemError' wx:if="{{item.answerResult=='error'}}">{{item.number}}</view>
       <view class='singleChoiceItemBlank' wx:if="{{item.answerResult==null||item.answerResult=='blank'}}">{{item.number}}</view>
     </view>
+<view style='height:20rpx;  clear: both;'></view>
 
+<view class='title'> 
+      <text style='color:#1bd0db;font-size: 50rpx;margin-right:15rpx;'>|</text>
+      <text>判断题</text>
+  </view>
+ 
+  <view class='singleChoice' wx:for="{{tfQuestionList}}" data-index="{{index}}" data-chosetype="truefalse" bindtap="showDetail">
+    <view class='singleChoiceItemCorrect' wx:if="{{item.answerResult=='correct'}}">{{item.number}}</view>
+    <view class='singleChoiceItemError' wx:if="{{item.answerResult=='error'}}">{{item.number}}</view>
+    <view class='singleChoiceItemBlank' wx:if="{{item.answerResult==null||item.answerResult=='blank'}}">{{item.number}}</view>
+  </view>
 
   <view style='clear: both;'></view>
 

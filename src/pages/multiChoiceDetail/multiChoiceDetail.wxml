@@ -42,12 +42,12 @@
 
   <view class='blankView'></view>
 
- <view class='submit' bindtap='submit' wx:if="{{nowQuestionNumber==questionList.length-1}}">
+<!-- <view class='submit' bindtap='submit' wx:if="{{nowQuestionNumber==questionList.length-1}}">
     <image class='handIcon' src='../../images/hand.png' ></image>
     交卷
-  </view>
+  </view>-->
 
-  <view class='submit' bindtap='afterQuestion' wx:if="{{nowQuestionNumber!=questionList.length-1}}">
+  <view class='submit' bindtap='afterQuestion'>
     <image class='handIcon' src='../../images/hand.png' ></image>
     下一题
   </view>

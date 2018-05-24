@@ -7,7 +7,7 @@
     </view>
 
   <view class='top'>  
-    <view class='topLeft'><text style='margin-left:20rpx;' wx:if="{{choseType=='single'}}">单项选择</text><text style='margin-left:20rpx;' wx:elif="{{choseType=='multi'}}">多项选择</text></view>
+    <view class='topLeft'><text style='margin-left:20rpx;' wx:if="{{choseType=='single'}}">单项选择</text><text style='margin-left:20rpx;' wx:elif="{{choseType=='multi'}}">多项选择</text><text style='margin-left:20rpx;' wx:elif="{{choseType=='truefalse'}}">判断题</text></view>
 
     <view class='topRight' wx:if="{{choseType=='single'}}">
       <view class='topRightContent'>
@@ -19,6 +19,11 @@
         <text style='color:#1bd0bd;font-size:50rpx; font-style:italic;margin-right:10rpx;'>{{nowQuestion.number}}</text><text> / {{multiQuestionList.length}}</text>
       </view>
     </view>
+		<view class='topRight' wx:elif="{{choseType=='truefalse'}}">
+			<view class='topRightContent'>
+				<text style='color:#1bd0bd;font-size:50rpx; font-style:italic;margin-right:10rpx;'>{{nowQuestion.number}}</text><text> / {{truefalseQuestionList.length}}</text>
+			</view>
+		</view>
   </view>
 
 
@@ -28,8 +33,9 @@
 
   <view class='questionOption'>
     <view class='item' wx:for="{{nowQuestion.options}}"  wx:for-index="key" wx:for-item="value">
-      <view class='blankCharacter character' >{{choseQuestions[key]}}</view>
-      <view class='option'>{{nowQuestion.options[0]}}</view>
+      <view class='blankCharacter character' wx:if="{{choseType!='truefalse'}}">{{choseQuestions[key]}}</view>
+			<view class='blankCharacter character' wx:if="{{choseType=='truefalse'}}">{{tfchoseQuestions[key]}}</view>
+      <view class='option'>{{nowQuestion.options[key]}}</view>
     </view>
   </view>
 

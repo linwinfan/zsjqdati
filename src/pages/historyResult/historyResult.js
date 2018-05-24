@@ -9,6 +9,7 @@ Page({
     choseQuestionBank:'',
     singleQuestionList: [],
     multiQuestionList: [],
+		tfQuestionList: [],
     loading:true,
     defeatNumber:0,
     averageScore:0,
@@ -27,6 +28,7 @@ Page({
     var currentUserId = currentUser.id;
     var getSingleQuestionList = getApp().globalData.singleChoiceAnswerNow;
     var getMultiQuestionList = getApp().globalData.multiChoiceAnswerNow;
+		var getTfQuestionList = getApp().globalData.truefalseAnswerNow;
     for (var i = 0; i < getSingleQuestionList.length; i++) {
       getSingleQuestionList[i].number = i + 1;
     }
@@ -44,6 +46,7 @@ Page({
       totalscore:totalscore,
       singleQuestionList: getSingleQuestionList,
       multiQuestionList: getMultiQuestionList,
+			tfQuestionList:getTfQuestionList,
       loading:false
     });
 
@@ -53,214 +56,51 @@ Page({
 
   getDefeatNumber:function(){
     var choseQuestionBank = that.data.choseQuestionBank;
-    var History = Bmob.Object.extend("history");
-    var queryHistory = new Bmob.Query(History);
-    var defeatNumber=0;
-    if (choseQuestionBank == '大学计算机期末考试题库') {
-      queryHistory.equalTo("choseQuestionBank", "大学计算机期末考试题库");
-      queryHistory.find({
-        success: function (results) {
-          for (var i = 0; i < results.length; i++) {
-            var score = results[i].attributes.score;
-            if(that.data.score>score){
-              defeatNumber++;
-            }
-          }
-          that.setData({
-            defeatNumber: defeatNumber,
-          });
-        },
-        error: function (error) {
-          console.log("查询失败: " + error.code + " " + error.message);
-        }
-      });
-    }
-    else if (choseQuestionBank == '计算机二级office题库') {
-      queryHistory.equalTo("choseQuestionBank", "计算机二级office题库");
-      queryHistory.find({
-        success: function (results) {
-          for (var i = 0; i < results.length; i++) {
-            var score = results[i].attributes.score;
-            if (that.data.score > score) {
-              defeatNumber++;
-            }
-          }
-          that.setData({
-            defeatNumber: defeatNumber,
-          });
-        },
-        error: function (error) {
-          console.log("查询失败: " + error.code + " " + error.message);
-        }
-      });
-    }
-    else if (choseQuestionBank == '毛概期末考试题库') {
-      queryHistory.equalTo("choseQuestionBank", "毛概期末考试题库");
-      queryHistory.find({
-        success: function (results) {
-          for (var i = 0; i < results.length; i++) {
-            var score = results[i].attributes.score;
-            if (that.data.score > score) {
-              defeatNumber++;
-            }
-          }
-          that.setData({
-            defeatNumber: defeatNumber,
-          });
-        },
-        error: function (error) {
-          console.log("查询失败: " + error.code + " " + error.message);
-        }
-      });
-    }
-    else if (choseQuestionBank == '中国近代史期末考试题库') {
-      queryHistory.equalTo("choseQuestionBank", "中国近代史期末考试题库");
-      queryHistory.find({
-        success: function (results) {
-          for (var i = 0; i < results.length; i++) {
-            var score = results[i].attributes.score;
-            if (that.data.score > score) {
-              defeatNumber++;
-            }
-          }
-          that.setData({
-            defeatNumber: defeatNumber,
-          });
-        },
-        error: function (error) {
-          console.log("查询失败: " + error.code + " " + error.message);
-        }
-      });
-    }
-    else if (choseQuestionBank == '马克思原理期末考试题库') {
-      queryHistory.equalTo("choseQuestionBank", "马克思原理期末考试题库");
-      queryHistory.find({
-        success: function (results) {
-          for (var i = 0; i < results.length; i++) {
-            var score = results[i].attributes.score;
-            if (that.data.score > score) {
-              defeatNumber++;
-            }
-          }
-          that.setData({
-            defeatNumber: defeatNumber,
-          });
-        },
-        error: function (error) {
-          console.log("查询失败: " + error.code + " " + error.message);
-        }
-      });
-    }
-    else if (choseQuestionBank == '形式与政策') {
-      queryHistory.equalTo("choseQuestionBank", "形式与政策");
-      queryHistory.find({
-        success: function (results) {
-          for (var i = 0; i < results.length; i++) {
-            var score = results[i].attributes.score;
-            if (that.data.score > score) {
-              defeatNumber++;
-            }
-          }
-          that.setData({
-            defeatNumber: defeatNumber,
-          });
-        },
-        error: function (error) {
-          console.log("查询失败: " + error.code + " " + error.message);
-        }
-      });
-    }
+    //var History = Bmob.Object.extend("history");
+    var queryHistory = new Bmob.Query("history");
+    
+		queryHistory.equalTo("choseQuestionBank","==", choseQuestionBank);
+		queryHistory.equalTo("score",">",that.data.score)
+		queryHistory.count().then(res=>{
+			that.setData({
+				defeatNumber: res+1,
+				loading: false
+			});
+		});
+// 		queryHistory.find({
+// 			success: function (results) {
+// 				for (var i = 0; i < results.length; i++) {
+// 					var score = results[i].attributes.score;
+// 					if(that.data.score>score){
+// 						defeatNumber++;
+// 					}
+// 				}
+// 				that.setData({
+// 					defeatNumber: defeatNumber,
+// 				});
+// 			},
+// 			error: function (error) {
+// 				console.log("查询失败: " + error.code + " " + error.message);
+// 			}
+// 		});
   },
 
   
   getAverageScore:function(){
     var choseQuestionBank = that.data.choseQuestionBank;
-    var QBAttributes = Bmob.Object.extend("QBAttributes");
-    var queryQBAttributes = new Bmob.Query(QBAttributes);
-    if (choseQuestionBank == '大学计算机期末考试题库'){
-      queryQBAttributes.get("6o5I3334", {
-        success: function (result) {
-          var averageScore = result.get("averageScore");
-          var newAverageScore = averageScore.toFixed(1);
-          that.setData({
-            averageScore: newAverageScore,
-          });
-        },
-        error: function (object, error) {
-          // 查询失败
-        }
-      });
-    }
-    else if (choseQuestionBank == '计算机二级office题库') {
-      queryQBAttributes.get("cVH1OOOX", {
-        success: function (result) {
-          var averageScore = result.get("averageScore");
-          var newAverageScore = averageScore.toFixed(1);
-          that.setData({
-            averageScore: newAverageScore,
-          });
-        },
-        error: function (object, error) {
-          // 查询失败
-        }
-      });
-    }
-    else if (choseQuestionBank == '毛概期末考试题库') {
-      queryQBAttributes.get("pQrWhhhm", {
-        success: function (result) {
-          var averageScore = result.get("averageScore");
-          var newAverageScore = averageScore.toFixed(1);
-          that.setData({
-            averageScore: newAverageScore,
-          });
-        },
-        error: function (object, error) {
-          // 查询失败
-        }
-      });
-    }
-    else if (choseQuestionBank == '中国近代史期末考试题库') {
-      queryQBAttributes.get("h07m333C", {
-        success: function (result) {
-          var averageScore = result.get("averageScore");
-          var newAverageScore = averageScore.toFixed(1);
-          that.setData({
-            averageScore: newAverageScore,
-          });
-        },
-        error: function (object, error) {
-          // 查询失败
-        }
-      });
-    }
-    else if (choseQuestionBank == '马克思原理期末考试题库') {
-      queryQBAttributes.get("ZwT6AAAa", {
-        success: function (result) {
-          var averageScore = result.get("averageScore");
-          var newAverageScore = averageScore.toFixed(1);
-          that.setData({
-            averageScore: newAverageScore,
-          });
-        },
-        error: function (object, error) {
-          // 查询失败
-        }
-      });
-    }
-    else if (choseQuestionBank == '形式与政策') {
-      queryQBAttributes.get("6o5I3334", {
-        success: function (result) {
-          var averageScore = result.get("averageScore");
-          var newAverageScore = averageScore.toFixed(1);
-          that.setData({
-            averageScore: newAverageScore,
-          });
-        },
-        error: function (object, error) {
-          // 查询失败
-        }
-      });
-    }
+    //var QBAttributes = Bmob.Object.extend("QBAttributes");
+    var queryQBAttributes = new Bmob.Query("QBAttributes");
+		queryQBAttributes.equalTo("choseQuestionBank","==", choseQuestionBank);
+		queryQBAttributes.find().then(res=>{
+			if(res.length>0){
+				var averageScore = res[0].averageScore;
+				var newAverageScore = averageScore.toFixed(1);
+				that.setData({
+					averageScore: newAverageScore,
+				});
+			}
+			
+		}).catch(err=>{console.log(err)});
   },
 
   getCorrectRate:function(){
@@ -273,17 +113,12 @@ Page({
   },
  
   showDetail: function (e) {
+		console.log(e.currentTarget.dataset)
     var index = e.currentTarget.dataset.index;
     var choseType = e.currentTarget.dataset.chosetype;
-    if (choseType =='single'){
-      wx.navigateTo({
-        url: '../analysis/analysis?choseType=single&index=' + index
-      });
-    }
-    else if (choseType == 'multi')
     wx.navigateTo({
-      url: '../analysis/analysis?choseType=multi&index=' + index
-    });
+    		url: '../analysis/analysis?choseType='+choseType+'&index=' + index
+    	});
   },
 
 
